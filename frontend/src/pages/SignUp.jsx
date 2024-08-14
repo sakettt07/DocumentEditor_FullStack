@@ -1,16 +1,46 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaUser, FaUserAlt, FaUserAstronaut } from "react-icons/fa";
 import { MdEmail, MdPassword } from "react-icons/md";
 import { FaPhone } from "react-icons/fa6";
+import { Api_Url } from "../helper";
 
 const SignUp = () => {
+  const navigate=useNavigate();
   const [username, setUsername] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [pwd, setPwd] = useState("");
   const [error, setError] = useState("");
+
+  const createUser=(e)=>{
+    e.preventDefault();
+
+    fetch(Api_Url+"/signup",{
+      mode:"cors",
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json",
+      },
+      body:JSON.stringify({
+        username:username,
+        name:name,
+        email:email,
+        phone:phone,
+        password:pwd
+      }),
+    })
+    .then((res)=>res.json())
+    .then((data)=>{
+      if(data.success==false){
+        setError(data.message)
+      }
+      else{
+        navigate("/login");
+      }
+    })
+  }
   return (
     <>
       <div className="w-full h-screen bg-[#F0F0F0]">
@@ -25,7 +55,7 @@ const SignUp = () => {
               <h2 className="text-[2vw]">Edit-Smart</h2>
             </div>
 
-            <form className="pl-3 mt-3" action="">
+            <form className="pl-3 mt-3" onSubmit={createUser}>
               {/* username */}
               <div className="inputCon mb-[8px]">
                 <p className=" text-[14px] text-[#808080]">Username</p>

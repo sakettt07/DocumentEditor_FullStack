@@ -1,5 +1,5 @@
 const userModel=require("../models/userModel.js");
-const userControl=async(req,res)=>{
+const userControl=async(req,res,next)=>{
     try {
         let {username,name,email,password,phone}=req.body;
         let emailCon=await userModel.findOne({email:email});
@@ -16,7 +16,8 @@ const userControl=async(req,res)=>{
                     if(err)throw err;
                     let user=await userModel.create({
                         username,email,phone,name,password:hash
-                    })
+                    });
+                    res.json({success:true,message:"User created successfully"})
                 })
             })
         }
