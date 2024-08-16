@@ -1,13 +1,41 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { MdEmail, MdPassword } from "react-icons/md";
+import { Api_Url } from "../helper";
 
 
 const Login = () => {
+  const navigate=useNavigate();
   const [email, setEmail] = useState("");
   const [pwd, setPwd] = useState("");
   const [error, setError] = useState("");
+
+  const loginUser=(e)=>{
+    e.preventDefault();
+    fetch(Api_Url+"/login",{
+      mode:"cors",
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json"
+      },
+      body: JSON.stringify({
+        email: email,
+        password: pwd
+      })
+    }).then(res => res.json()).then(data => {
+      if(data.success === true){
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("isLoggedIn", true);
+        localStorage.setItem("userId", data.userId);
+        setTimeout(() => {
+          navigate("/");
+        }, 100);
+      }else{
+        setError(data.message);
+      }
+    })
+  }
   return (
     <>
       <div className="w-full h-screen bg-[#0d1a22]">
@@ -22,7 +50,7 @@ const Login = () => {
               <h2 className="text-[2vw]">Edit-Smart</h2>
             </div>
 
-            <form className="pl-3 mt-3" action="">
+            <form onSubmit={loginUser} className="pl-3 mt-3" action="">
 
               {/* email */}
               <div className="inputCon mb-[4px]">

@@ -33,7 +33,7 @@ const SignUp = () => {
     })
     .then((res)=>res.json())
     .then((data)=>{
-      if(data.success==false){
+      if(data.success===false){
         setError(data.message)
       }
       else{

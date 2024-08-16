@@ -3,19 +3,19 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var connectDB = require('./config/mongodb');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-const connectDB = require('./config/mongodb');
 var cors=require("cors")
 
 var app = express();
+require('dotenv').config();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-require('dotenv').config();
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -25,6 +25,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(cors());
 
+// db funtion
+connectDB();
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
@@ -34,8 +36,6 @@ app.use(function(req, res, next) {
   next(createError(404));
 });
 
-// db funtion
-connectDB();
 
 // error handler
 app.use(function(err, req, res, next) {
