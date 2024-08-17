@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-
 import { MdEmail, MdPassword } from "react-icons/md";
 import { Api_Url } from "../helper";
 
@@ -29,7 +28,7 @@ const Login = () => {
         localStorage.setItem("isLoggedIn", true);
         localStorage.setItem("userId", data.userId);
         setTimeout(() => {
-          navigate("/");
+          navigate("/home");
         }, 100);
       }else{
         setError(data.message);
