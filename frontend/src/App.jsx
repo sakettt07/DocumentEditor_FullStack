@@ -6,6 +6,7 @@ import NoPage from './pages/NoPage';
 import SignUp from './pages/SignUp';
 import Login from './pages/Login';
 import Loader from './components/Loader';
+import CreateDocs from "./pages/CreateDocs";
 
 const App = () => {
 
@@ -17,6 +18,7 @@ const App = () => {
           <Route path='/home' element={<Home />} />
           <Route path='/signup' element={<SignUp />} />
           <Route path='/login' element={<Login />} />
+          <Route path='/createdocs/:id' element={<CreateDocs />} />
           <Route path="*" element={<NoPage />} />
         </Routes>
     </>
