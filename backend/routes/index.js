@@ -1,6 +1,6 @@
 var express = require('express');
 const { signUpControl,loginControl } = require('../controllers/userController');
-const {getDocs} =require("../controllers/docsController.js");
+const {getCurrDoc,createDocs,updateDoc} =require("../controllers/docsController.js");
 var router = express.Router();
 
 /* GET home page. */
@@ -11,6 +11,8 @@ router.get('/', function(req, res, next) {
 // Define the signup route
 router.post("/signup", signUpControl);
 router.post("/login",loginControl);
-router.get("/docs",getDocs)
+// router.post("/getDoc",getCurrDoc)
+router.post("/createDoc",createDocs);
+router.post("/updateDoc",updateDoc);
 
 module.exports = router;
