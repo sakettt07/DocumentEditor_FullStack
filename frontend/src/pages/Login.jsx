@@ -10,31 +10,39 @@ const Login = () => {
   const [pwd, setPwd] = useState("");
   const [error, setError] = useState("");
 
-  const loginUser=(e)=>{
+  const loginUser = (e) => {
     e.preventDefault();
-    fetch(Api_Url+"/login",{
-      mode:"cors",
-      method:"POST",
-      headers:{
-        "Content-Type":"application/json"
+    fetch(Api_Url + "/login", {
+      mode: "cors",
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         email: email,
-        password: pwd
-      })
-    }).then(res => res.json()).then(data => {
-      if(data.success === true){
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("isLoggedIn", true);
-        localStorage.setItem("userId", data.userId);
-        setTimeout(() => {
-          navigate("/home");
-        }, 100);
-      }else{
-        setError(data.message);
-      }
+        password: pwd,
+      }),
     })
-  }
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("Server response data:", data); // Debug log
+        if (data.success) {
+          localStorage.setItem("token", data.token);
+          localStorage.setItem("isLoggedIn", true);
+          localStorage.setItem("userId", data.userID);
+          console.log("User ID set in localStorage:", data.userID); // Debug log
+          setTimeout(() => {
+            navigate("/home");
+          }, 100);
+        } else {
+          setError(data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("Login error:", error); // Debug log
+        setError("An error occurred during login.");
+      });
+  };
   return (
     <>
       <div className="w-full h-screen bg-[#0d1a22]">

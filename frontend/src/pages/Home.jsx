@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import Navbar from "../components/Navbar";
 import Docs from "../components/Docs";
 import { MdOutlineTitle } from "react-icons/md";
@@ -11,6 +11,7 @@ const Home = () => {
   const [isCreateModelShow, setIsCreateModelShow] = useState(false);
   const [title, setTitle] = useState("");
   const [error, setError] = useState("");
+  const [data,setData]=useState(null);
 
 
   // main function to create  a document.
@@ -18,6 +19,16 @@ const Home = () => {
     if (title === "") {
       setError("Please enter title");
     } else {
+      const userID = localStorage.getItem("userId");
+  
+      // Check if userId is properly retrieved from localStorage
+      if (!userID) {
+        setError("User ID is not found in localStorage.");
+        return;
+      }
+  
+      console.log("Creating document with title:", title, "and userId:", userID);
+  
       fetch(Api_Url + "/createDoc", {
         mode: "cors",
         method: "POST",
@@ -26,12 +37,13 @@ const Home = () => {
         },
         body: JSON.stringify({
           docName: title,
-          userId: localStorage.getItem("userId"),
+          userId: userID,
         }),
       })
         .then((res) => {
+          console.log("Response status:", res.status);
           if (!res.ok) {
-            throw new Error("Network response was not ok");
+            throw new Error(`Network response was not ok: ${res.statusText}`);
           }
           return res.json();
         })
@@ -44,11 +56,51 @@ const Home = () => {
           }
         })
         .catch((error) => {
-          console.error('Fetch error:', error);
-          setError('An error occurred while creating the document.');
+          console.error("Fetch error:", error);
+          setError("An error occurred while creating the document.");
         });
     }
   };
+  const getData = () => {
+    const userId = localStorage.getItem("userId");
+  
+    if (!userId) {
+      console.error("User ID is undefined or not found in localStorage");
+      return; // Exit the function if userId is undefined
+    }
+  
+    fetch(Api_Url + "/getAllDocs", {
+      mode: "cors",
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ userId }),
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`HTTP error! Status: ${res.status}`);
+        }
+        return res.json();
+      })
+      .then((data) => {
+        if (data.success) {
+          setData(data.docs);
+        } else {
+          console.error("Error from server:", data.message);
+          setError(data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching documents:", error);
+        setError("An error occurred while fetching the documents. Please try again.");
+      });
+  };
+  
+  useEffect(() => {
+    getData();
+  }, []);
+  
   return (
     <>
       <Navbar />
@@ -65,8 +117,15 @@ const Home = () => {
           <h3>Add new</h3>
         </button>
       </div>
-      {/* displaying the docs */}
-      <Docs />
+      <div className="w-full h-screen bg-zinc-400 p-10 grid grid-cols-2 md:grid-cols-4 gap-6">
+      {data && data.length > 0 ? (
+                data.map((el, index) => (
+                    <Docs key={el._id} docs={el} docID={`doc-${index + 1}`} />
+                ))
+            ) : (
+                <p className="text-center text-gray-800 text-[2vw]">No document present</p>
+            )}
+      </div>
 
       {isCreateModelShow ? (
         <>

@@ -41,7 +41,7 @@ const loginControl=async (req,res)=>{
         if(user){
             bcrypt.compare(password,user.password,function(err,result){
                 if(result){
-                    var token=jwt.sign({email:user.email,userID:user._id},process.env.SECRET)
+                    var token=jwt.sign({email:user.email,userId:user._id},process.env.SECRET)
                     res.json({success:true,message:"Login Successfully",userID:user._id,token:token})
                 }
                 else{
@@ -57,4 +57,24 @@ const loginControl=async (req,res)=>{
     res.status(500).json({ success: false, message: "Server Error" });
     }
 }
-module.exports = { signUpControl,loginControl };
+const logoutControl=async(req,res)=>{
+  let {userId} = req.body;
+  let user = await userModel.findById(userId);
+  if(user){
+    return res.json({success:true,message:"User logged out successfully"});
+  }
+  else{
+    return res.json({success:false,message:"Invalid user"})
+  }
+}
+const currUser=async(req,res)=>{
+  let {userId} = req.body;
+  let user = await userModel.findById(userId);
+  if(user){
+    return res.json({success:true,message:"User fetched successfully",user:user});
+  }
+  else{
+    return res.json({success:false,message:"Invalid user"})
+  }
+}
+module.exports = { signUpControl,loginControl,logoutControl,currUser };

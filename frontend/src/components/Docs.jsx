@@ -1,32 +1,86 @@
 import React, { useState } from "react";
-import {RiDeleteBin2Fill} from "react-icons/ri"
+import { RiDeleteBin2Fill } from "react-icons/ri";
+import { Api_Url } from "../helper";
+import { useNavigate } from "react-router-dom";
 
-const Docs = () => {
+const Docs = ({ docs }) => {
+  const navigate = useNavigate();
   const [isDeleteModelShow, setIsDeleteModelShow] = useState(false);
-  const deleteDoc = () => {};
+  const [error, setError] = useState("");
 
+  const docID = `doc-${docs._id}`;
+
+  const deleteDoc = (id, docID) => {
+    let doc = document.getElementById(docID);
+    fetch(Api_Url + "/deleteDoc", {
+      mode: "cors",
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        docId: id,
+        userId: localStorage.getItem("userId"),
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success === false) {
+          setError(data.message);
+        } else {
+          setIsDeleteModelShow(false);
+          setTimeout(() => {
+            alert(data.message);
+          }, 100);
+          doc.remove();
+        }
+      })
+      .catch((error) => {
+        console.error("Error deleting document:", error);
+        setError("An error occurred while deleting the document.");
+      });
+  };
 
   return (
-    <div className="bg-neutral-900 p-10 w-full h-screen">
-      <div className="grid grid-cols-4 gap-6">
-        <div className="w-76 rounded-md min-h-44 p-4 bg-neutral-500">
-          <div className="flex pr-12 items-center justify-between">
-            <img className="w-16" src="https://cdn-icons-png.flaticon.com/512/5968/5968517.png" alt="" />
-            <p>Document Name </p>
-          </div>
-          <p className="mt-3">Lorem ipsum dolor usantium iure!</p>
-          <div className="flex mt-8 justify-between items-center">
-            <p>Date :1</p>
-            <p>Date :2</p>
-            <RiDeleteBin2Fill onClick={()=>setIsDeleteModelShow(true)} />
-
-          </div>
+    <div>
+      {/* Main container */}
+      <div
+        id={docID}
+        onClick={() => {
+          navigate(`/createDocs/${docs._id}`);
+        }}
+        className="w-76 cursor-pointer rounded-md min-h-44 p-4 bg-neutral-500"
+      >
+        <div className="flex pr-12 items-center justify-between">
+          <img
+            className="w-16"
+            src="https://cdn-icons-png.flaticon.com/512/5968/5968517.png"
+            alt=""
+          />
+          <p>{docs.title} </p>
         </div>
-        
-        {isDeleteModelShow ? (
+        <p className="mt-3">Lorem ipsum dolor usantium iure!</p>
+        <div className="flex px-3 mt-8 justify-between items-center">
+          <p className="text-sm">
+            Created : {new Date(docs.date).toDateString()} <br />
+            Updated : {new Date(docs.lastUpdate).toDateString()}
+          </p>
+          {/* Delete icon with stopPropagation to prevent bubbling */}
+          <RiDeleteBin2Fill
+            className="text-4xl hover:text-white"
+            onClick={(e) => {
+              e.stopPropagation(); // Prevent navigation click from firing
+              setIsDeleteModelShow(true);
+            }}
+          />
+        </div>
+      </div>
+
+      {/* Delete modal */}
+      {isDeleteModelShow && (
         <>
-          <div className="deletedocs fixed top-0 left-0 right-0 bottom-0 bg-[rgb(0,0,0,.3)] w-screen h-screen flex flex-col items-center justify-center ">
-            <div className="deletedocs p-[15px] bg-[#fff] rounded-lg w-[30vw] h-[32.5vh] ">
+          <div className="deletedocs fixed top-0 left-0 right-0 bottom-0 bg-[rgb(0,0,0,.3)] w-screen h-screen flex flex-col items-center justify-center">
+            <div className="deletedocs p-[15px] bg-[#fff] rounded-lg w-[30vw] h-[32.5vh]">
               <h3 className="text-[20px]">Create New Document</h3>
               <div className="flex items-center gap-4">
                 <img
@@ -41,7 +95,9 @@ const Docs = () => {
               </div>
               <div className="flex -mt-2 items-center gap-2 justify-between w-full">
                 <button
-                  onClick={deleteDoc}
+                  onClick={() => {
+                    deleteDoc(docs._id, docID);
+                  }}
                   className="btnBlue p-[10px] rounded-lg bg-orange-300 !min-w-[49%]"
                 >
                   Delete Document
@@ -58,11 +114,7 @@ const Docs = () => {
             </div>
           </div>
         </>
-      ) : (
-        ""
       )}
-
-      </div>
     </div>
   );
 };
