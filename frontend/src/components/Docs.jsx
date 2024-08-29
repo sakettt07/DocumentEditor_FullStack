@@ -49,25 +49,26 @@ const Docs = ({ docs }) => {
         onClick={() => {
           navigate(`/createDocs/${docs._id}`);
         }}
-        className="w-76 cursor-pointer rounded-md min-h-44 p-4 bg-neutral-500"
+        className="w-76 cursor-pointer rounded-md min-h-44 p-4 hover:bg-zinc-800 shadow-lg bg-black"
       >
         <div className="flex pr-12 items-center justify-between">
           <img
-            className="w-16"
+            className="w-[60px]"
             src="https://cdn-icons-png.flaticon.com/512/5968/5968517.png"
             alt=""
           />
-          <p>{docs.title} </p>
+          <p title="Doc name" className="text-white text-[1.3vw]">{docs.title} </p>
         </div>
-        <p className="mt-3">Lorem ipsum dolor usantium iure!</p>
+        <p title="Doc description" className="mt-3 ml-6 text-white">Desc :{docs.desc}</p>
         <div className="flex px-3 mt-8 justify-between items-center">
-          <p className="text-sm">
+          <p className="text-[10px] text-white">
             Created : {new Date(docs.date).toDateString()} <br />
             Updated : {new Date(docs.lastUpdate).toDateString()}
           </p>
           {/* Delete icon with stopPropagation to prevent bubbling */}
           <RiDeleteBin2Fill
-            className="text-4xl hover:text-white"
+          title="Delete doc"
+            className="text-3xl text-white"
             onClick={(e) => {
               e.stopPropagation(); // Prevent navigation click from firing
               setIsDeleteModelShow(true);

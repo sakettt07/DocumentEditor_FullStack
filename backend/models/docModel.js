@@ -21,6 +21,9 @@ const docsSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  desc:{
+    type:String
+  }
 });
 
 module.exports = mongoose.model("Docs", docsSchema);

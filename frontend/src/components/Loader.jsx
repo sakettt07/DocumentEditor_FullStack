@@ -9,8 +9,8 @@ const Loader = () => {
           <div className="text-center ">
             <h1 className="text-4xl font-extrabold tracking-tight text-gray-900 dark:text-slate-200 sm:text-5xl md:text-6xl">
               <span className="block xl:inline">
-                <span className="mb-1 block">Document Mender</span>
-                <span className="bg-gradient-to-r from-indigo-400 to-pink-600 bg-clip-text text-transparent">
+                <span className="mb-1 block">Edit Smart</span>
+                <span className="bg-gradient-to-r text-[50px] from-indigo-400 to-pink-600 bg-clip-text text-transparent">
                   save & Edit
                 </span>
               </span>
@@ -30,9 +30,7 @@ const Loader = () => {
               </div>
             </h1>
             <p className="mx-auto mt-3 max-w-xl text-lg text-gray-500 dark:text-slate-400 sm:mt-5 md:mt-5">
-              example is the AI Content Generator that helps you and your team
-              break through creative blocks to create amazing, original content
-              10X faster.
+              Make new document and get saved
             </p>
             <div className="mt-5 sm:mt-8 sm:flex sm:justify-center">
               <div className="rounded-md shadow">

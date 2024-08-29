@@ -10,6 +10,8 @@ const Login = () => {
   const [pwd, setPwd] = useState("");
   const [error, setError] = useState("");
 
+  // the login function starts here
+
   const loginUser = (e) => {
     e.preventDefault();
     fetch(Api_Url + "/login", {
@@ -45,19 +47,19 @@ const Login = () => {
   };
   return (
     <>
-      <div className="w-full h-screen bg-[#0d1a22]">
+      <div className="w-full h-screen bg-[#d5e0e7]">
         <div className="grid grid-cols-2 w-full h-full items-center">
           <div className="left justify-center items-center  w-full h-full flex flex-col">
-            <div className="flex items-center mb-5">
+            <div className="flex gap-3 items-center mb-5">
               <img
                 className="w-[50px]"
                 src="https://cdn.icon-icons.com/icons2/570/PNG/512/document_9_icon-icons.com_54619.png"
                 alt=""
               />
-              <h2 className="text-[2vw]">Edit-Smart</h2>
+              <h2 className="text-[2vw] font-regular">Edit-Smart</h2>
             </div>
 
-            <form onSubmit={loginUser} className="pl-3 mt-3" action="">
+            <form onSubmit={loginUser} className="pl-3 mt-3">
 
               {/* email */}
               <div className="inputCon mb-[4px]">

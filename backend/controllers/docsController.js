@@ -33,7 +33,7 @@ const getCurrDoc = async (req, res) => {
 };
 
 const createDocs = async (req, res) => {
-  const { userId, docName } = req.body;
+  const { userId, docName,desc } = req.body;
 
   // Check if userId is provided
   if (!userId) {
@@ -53,6 +53,7 @@ const createDocs = async (req, res) => {
     const doc = await docModel.create({
       uploadedBy: userId,
       title: docName,
+      desc
     });
 
     console.log("Document created successfully:", doc._id);
